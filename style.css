@@ -151,3 +151,54 @@ aside {
     font-size: 1.6em;
     font-weight: bold;
 }
+
+/* --- オプション選択モーダル専用 --- */
+.opt-modal {
+    display: none;
+    position: fixed;
+    z-index: 3000; /* カートより手前に表示 */
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6); /* 背景を暗く */
+}
+
+.opt-content {
+    background-color: white;
+    width: 80%;
+    max-width: 600px;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.opt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.opt-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1.2em;
+}
+
+/* チェックボックスを大きくして押しやすく */
+.opt-item input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+}
+
+.opt-footer {
+    display: flex;
+    gap: 10px;
+}
+
+.opt-btn-cancel { flex: 1; padding: 15px; background: #ccc; border: none; border-radius: 10px; }
+.opt-btn-add { flex: 2; padding: 15px; background: var(--primary-green); color: white; border: none; border-radius: 10px; font-weight: bold; }
