@@ -10,24 +10,22 @@
 
 <header>
     <div class="category-top">
-        <div class="category-item">期間限定スイーツ</div>
-        <div class="category-item active">ドリンク</div>
-        <div class="category-item">軽食</div>
-        <div class="category-item">デザート</div>
-        <div class="category-item">モーニング</div>
+        <div class="category-item" onclick="changeMainCategory('期間限定スイーツ', this)">期間限定スイーツ</div>
+        <div class="category-item active" onclick="changeMainCategory('ドリンク', this)">ドリンク</div>
+        <div class="category-item" onclick="changeMainCategory('軽食', this)">軽食</div>
+        <div class="category-item" onclick="changeMainCategory('デザート', this)">デザート</div>
+        <div class="category-item" onclick="changeMainCategory('モーニング', this)">モーニング</div>
     </div>
     <div class="category-sub">
-        <div class="sub-item">アイスコーヒー</div>
-        <div class="sub-item">ホットコーヒー</div>
-        <div class="sub-item">紅茶</div>
-        <div class="sub-item">ソフトドリンク</div>
-        <div class="sub-item">お子様用ドリンク</div>
-    </div>
+        </div>
 </header>
 
 <div class="container">
-    <main id="menu-grid">
-        </main>
+    <main>
+        <div id="menu-grid"></div>
+        
+        <div id="pagination-controls" class="pagination-container"></div>
+    </main>
 
     <aside>
         <button class="side-btn btn-call">🔔 店員を呼ぶ</button>
@@ -53,18 +51,17 @@
     </div>
 </div>
 
-<script src="script.js"></script>
-
 <div id="option-modal" class="opt-modal">
     <div class="opt-content">
         <h2 id="opt-product-name">商品名</h2>
-        <div id="opt-list-container" class="opt-list">
-            </div>
+        <div id="opt-list-container" class="opt-list"></div>
         <div class="opt-footer">
             <button class="opt-btn-cancel" onclick="closeOptionModal()">キャンセル</button>
             <button class="opt-btn-add" id="opt-add-to-cart-btn">カートに追加</button>
         </div>
     </div>
 </div>
+
+<script src="script.js"></script>
 </body>
 </html>
