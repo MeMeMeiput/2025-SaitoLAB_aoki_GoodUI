@@ -4,6 +4,7 @@
     --dark-green: #4da626;
     --sidebar-gray: #b8b8b8;
     --accent-yellow: #f1d42b;
+    --header-height: 125px; 
 }
 
 body {
@@ -44,24 +45,56 @@ header {
 .category-sub {
     background-color: var(--primary-green);
     display: flex;
-    padding: 10px;
-    gap: 8px;
+    padding: 0px;
+    gap: 0px;
+    height: 50px;
+    /*overflow: hidden;  子要素の背景がはみ出さないように */
 }
-
 .sub-item {
     flex: 1;
     padding: 12px;
     text-align: center;
-    background-color: var(--dark-green);
+    background-color: transparent; /* 親の背景色(primary-green)を活かす */
     color: white;
-    border-radius: 6px;
+    border-right: 1px solid rgba(255, 255, 255, 0.4); /* 白い線で区切る */
     font-size: 0.9em;
+    transition: all 0.15s ease; /* 反応を少し速く */
+    height: 100%; /* 高さを親いっぱいに */
+    position: relative; /* 子要素(::after)の基準点 */
+    box-sizing: border-box;
+}
+/* 最後の項目の右線は消す */
+.sub-item:last-child {
+    border-right: none;
+}
+/* --- 選択状態（一目でわかる変化） --- */
+.sub-item.active {
+    background-color: var(--dark-green) !important; /* 濃い緑で塗りつぶす */
+    color: white;
+    font-weight: bold;
+    /* 内側に影をつけて沈んでいる感を演出 */
+    box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.2); 
+    position: relative;
+    z-index: 1; /* 重なり順を上げる */
+}
+/* アクセシビリティ　下のアクセント線（沈んでいる感を邪魔しないよう少し細めに） */
+.sub-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--accent-yellow);
+    z-index: 10; /* 最前面に持ってくる */
 }
 
 /* メインレイアウト */
 .container {
     display: flex;
-    height: calc(100vh - 125px);
+    /* 変数を使って計算 */
+    height: calc(100vh - var(--header-height));
+    overflow: hidden; /* 全体スクロールを確実に防止 */
 }
 
 /* メインエリアを縦に分割するレイアウトへ */
@@ -94,13 +127,8 @@ main {
 /* 通常商品カードのサイズ */
 .card img {
     width: 100%;
-    height: 300px; /* タブレット1画面に収めるため高さを微調整 */
+    height: 240px; /* タブレット1画面に収めるため高さを微調整 */
     object-fit: cover;
-    transition: height 0.3s ease; /* サイズ変更を滑らかに */
-}
-/* ページ送りボタンがある時、画像を少し小さくしてボタンのスペースを確保 */
-.has-pagination .card img {
-    height: 250px; /* 数値はタブレットの画面サイズに合わせて調整してください */
 }
 
 .card-info {
@@ -108,7 +136,7 @@ main {
     text-align: center;
 }
 .card-title { font-size: 1.4em; font-weight: bold; }
-.card-price { font-size: 1.2em; color: #5c3b10; margin-top: 5px; }
+.card-price { font-size: 1.2em; color: #280508; margin-top: 5px; }
 
 /* ページ送りボタンのコンテナ */
 .pagination-container {
@@ -123,12 +151,11 @@ main {
 .page-btn {
     padding: 15px 40px;
     font-size: 1.2em;
+    color:#280508;
     font-weight: bold;
-    color: white;
-    background-color: var(--dark-green);
-    border: none;
+    background: white;
+    border: 2px solid #280508;
     border-radius: 50px;
-    box-shadow: 0 4px 0 #3a7d1d;
 }
 
 .page-btn:disabled {
@@ -157,9 +184,35 @@ aside {
 }
 
 .btn-call { background-color: var(--accent-yellow); color: black; }
-.btn-cart { flex: 1; background-color: #999; font-size: 1.3em; }
 
-/* カートモーダル */
+/* --- カートボタンの基本状態（無効時：灰色） --- */
+.side-btn.btn-cart {
+    background-color: #ccc; /* 無効時は灰色 */
+    color: #888;
+    cursor: not-allowed;    /* 押せないことを示すカーソル */
+    transition: all 0.3s ease;
+    opacity: 0.7;
+}
+
+/* --- カートに商品が入った時の有効状態 --- */
+.side-btn.btn-cart.active {
+    background-color: var(--primary-green); /* 有効時はメインの緑色 */
+    color: white;
+    cursor: pointer;        /* 押せることを示すカーソル */
+    opacity: 1;
+    box-shadow: 0 4px 15px rgba(102, 204, 51, 0.4); /* 少し光らせる演出 */
+    animation: pulse 0.5s ease-out; /* 商品が入った瞬間のアニメーション */
+}
+
+/* 商品が入った瞬間のピョコッという動き（ゲームUIらしさ） */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+
+/* カートモーダル (注文カートボタン)*/
 .modal {
     display: none;
     position: fixed;
@@ -170,26 +223,192 @@ aside {
 }
 
 .modal-content {
-    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 画面いっぱいに広げる */
+    padding: 20px;
+    /*box-sizing: border-box;*/
+    background-color: #f5f5f5;
+}
+/* 1. ヘッダー（「注文カート」のタイトルなど） */
+/* --- cart-header を上部に固定する --- */
+.cart-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 80px 200px;
+    background-color: #280508;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 0.9em;
+    border-radius: 5px 5px 0 0;
+    /* スクロールしても一番上に残るように設定 */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* 2. 商品リストエリア（ここだけをスクロールさせる） */
+/* --- cart-items-list の表示領域を最大化 --- */
+#cart-items-list {
+    flex: 1; /* 余ったスペースをすべて使い、ボタンを下に押しやる */
+    overflow-y: auto;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- order-confirm-btn をコンパクトに調整 --- */
+.cart-footer {
+    flex-shrink: 0; /* 高さを削られないように固定 */
+    padding: 10px 0; /* 上下の余白を詰める */
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
 }
 
 .close-btn {
-    float: right;
+    /* floatをやめ、幅を文字サイズに合わせる */
+    display: inline-block;
+    width: 60px; /* タブレットで押しやすい最小サイズ */
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
     font-size: 3em;
     font-weight: bold;
     cursor: pointer;
+    /* 右端に寄せる */
+    position: absolute;
+    right: 20px;
+    top: 10px;
 }
 
 .order-submit {
-    width: 100%;
-    padding: 25px;
-    background-color: var(--primary-green);
+    /* 横幅を90%から75%程度に縮小し、高さを抑える */
+    width: 75%;
+    max-width: 550px;
+    padding: 12px 30px; /* 上下22pxから12pxへ */
+    /* デザインを茶色系に変更（写真参考） */
+    background: linear-gradient(to bottom, #964b00, #733900); 
     color: white;
     border: none;
-    border-radius: 15px;
-    font-size: 1.6em;
+    border-radius: 40px; 
     font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+/* カート内の表形式レイアウト */
+.cart-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 80px 200px; /* 写真, 名前, 価格, 数量, 操作 */
+    background-color: #280508; /* 参考画像のような黒いヘッダー */
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 0.9em;
+    border-radius: 5px 5px 0 0;
+}
+
+.cart-item-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 80px 200px;
+    align-items: center;
+    padding: 15px 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+}
+
+/* 商品写真の小窓 */
+.cart-item-img {
+    width: 60px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* 商品名とオプション */
+.cart-item-info {
+    padding-left: 10px;
+}
+.cart-item-name { font-weight: bold; font-size: 1.1em; }
+.cart-item-options { font-size: 0.8em; color: #666; }
+
+/* 数量と価格のテキスト */
+.cart-item-price, .cart-item-qty {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 操作ボタン（変更・削除）を近づける */
+.cart-item-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.cart-btn-small {
+    padding: 10px 20px;
+    border: 2px solid #280508;
+    background: white;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+/* --- 削除ボタン専用のスタイルを追加 --- */
+.cart-btn-delete {
+    padding: 10px 20px;
+    border: 2px solid #d32f2f; /* 赤い境界線 */
+    background: #d32f2f;      /* ほんのり赤い背景 */
+    color: #ffffff;           /* 赤い文字 */
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+/* タップした時のフィードバック */
+.cart-btn-delete:active {
+    background-color: #d32f2f;
+    color: white;
+}
+/* カートのフッターエリア */
+.cart-footer {
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+    background-color: #f5f5f5; /* モーダルの背景と合わせる */
+}
+
+/* 注文確定ボタン（参考画像の茶色い楕円デザイン） */
+.order-submit {
+    width: 90%;
+    max-width: 700px;
+    padding: 22px;
+    /* 参考画像に近い落ち着いた茶色のグラデーション */
+    background: linear-gradient(to bottom, #66cc33, #448b21); 
+    color: white;
+    border: none;
+    border-radius: 60px; /* 綺麗な楕円形 */
+    font-size: 1.8em;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transition: transform 0.1s active;
+}
+
+/* タップした時のフィードバック（沈む演出） */
+.order-submit:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.order-submit:disabled {
+    background: #ccc;
+    box-shadow: none;
+}
+
 
 /* --- オプション選択モーダル専用 --- */
 .opt-modal {

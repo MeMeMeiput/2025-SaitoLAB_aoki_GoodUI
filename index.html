@@ -39,13 +39,17 @@
 </div>
 
 <div id="cart-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="display: flex; flex-direction: column; height: 100vh; position: relative;">
         <span class="close-btn" id="cart-close-btn">&times;</span>
-        <h1>注文カート</h1>
+        
+        <div style="flex-shrink: 0; padding-top: 10px;">
+            <h1 style="margin: 0;">注文内容の確認</h1>
+            <p style="margin: 10px 0; font-size: 0.9em; color: #666;">下記の内容でよろしければ注文を確定してください</p>
+        </div>
+        
         <div id="cart-items-list"></div>
-        <hr>
+        
         <div class="cart-footer">
-            <h2 id="total-price">合計: 税込 0円</h2>
             <button id="order-confirm-btn" class="order-submit">注文を確定する</button>
         </div>
     </div>

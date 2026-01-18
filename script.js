@@ -5,8 +5,8 @@
 // --- 商品データ一覧 ---
 const menuData = [
     // --- 期間限定スイーツ (1-99) ---
-    { id: 1, mainCategory: "期間限定スイーツ", category: "", name: "贅沢イチゴのケーキ", price: 800, image: "images/贅沢イチゴのケーキ.png", options: [] },
-    { id: 2, mainCategory: "期間限定スイーツ", category: "", name: "かぼちゃケーキ", price: 700, image: "images/かぼちゃケーキ.png", options: [] },
+    { id: 1, mainCategory: "期間限定スイーツ", category: "今月のイチオシ！", name: "贅沢イチゴのケーキ", price: 800, image: "images/贅沢イチゴのケーキ.png", options: [] },
+    { id: 2, mainCategory: "期間限定スイーツ", category: "今月のイチオシ！", name: "かぼちゃケーキ", price: 700, image: "images/かぼちゃケーキ.png", options: [] },
 
     // --- ドリンク (100-199) ---
     { id: 111, mainCategory: "ドリンク", category: "アイスコーヒー", name: "ブレンドコーヒー", price: 550, image: "images/ブレンドコーヒー.png", options: [{name: "ガムシロップ", price: 0}, {name: "ミルク", price: 0}] },
@@ -36,17 +36,17 @@ const menuData = [
     { id: 322, mainCategory: "デザート", category: "パフェ", name: "抹茶パフェ", price: 850, image: "images/抹茶パフェ.png", options: [] },
 
     // --- モーニング (400-499) ---
-    { id: 401, mainCategory: "モーニング", category: "", name: "モーニングトーストセット", price: 500, image: "images/モーニングトーストセット.png", options: [] },
-    { id: 402, mainCategory: "モーニング", category: "", name: "モーニングプレート", price: 700, image: "images/モーニングプレート.png", options: [] }
+    { id: 401, mainCategory: "モーニング", category: "モーニング", name: "モーニングトーストセット", price: 500, image: "images/モーニングトーストセット.png", options: [] },
+    { id: 402, mainCategory: "モーニング", category: "モーニング", name: "モーニングプレート", price: 700, image: "images/モーニングプレート.png", options: [] }
 ];
 
 // 大カテゴリーと小カテゴリーの紐付け設定
 const categoryMap = {
-    "期間限定スイーツ": [],
+    "期間限定スイーツ": ["今月のイチオシ！"],
     "ドリンク": ["アイスコーヒー", "ホットコーヒー", "紅茶", "ソフトドリンク", "お子様用ドリンク"],
     "軽食": ["サンドイッチ", "トースト・パン"],
     "デザート": ["ケーキ", "パフェ"],
-    "モーニング": []
+    "モーニング": ["モーニング"]
 };
 
 // 状態管理用変数
@@ -123,10 +123,10 @@ window.changeSubCategory = function(subCat, element) {
 // メニュー描画ロジックの修正
 // ==========================================
 function renderMenu() {
-    const mainElement = document.querySelector('main'); // main要素を取得
+    const bodyElement = document.body;
     const menuGrid = document.getElementById('menu-grid');
     const paginationControls = document.getElementById('pagination-controls');
-    if (!menuGrid || !paginationControls || !mainElement) return;
+    if (!menuGrid || !paginationControls || !bodyElement) return;
 
     // 1. フィルタリング
     const allFilteredItems = menuData.filter(item => {
@@ -134,13 +134,11 @@ function renderMenu() {
         const isSubMatch = (currentSub === "") ? true : (item.category === currentSub);
         return isMainMatch && isSubMatch;
     });
-    // --- 追加: ページネーションが必要か判断してクラスを付与 ---
-    if (allFilteredItems.length > ITEMS_PER_PAGE) {
-        mainElement.classList.add('has-pagination');
-    } else {
-        mainElement.classList.remove('has-pagination');
-    }
 
+    // 常にページ送りあり、小カテゴリーありの状態に統一
+    bodyElement.classList.remove('no-sub'); // クラスを外す
+    bodyElement.classList.add('has-pagination');
+    
     // 2. ページネーション用に切り出し
     const start = currentPage * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
@@ -163,23 +161,18 @@ function renderMenu() {
         </div>
     `).join('');
 
-    // 4. ページ送りボタンの描画
+    // 常にページ送りボタンを呼び出す
     renderPagination(allFilteredItems.length);
 }
 
-// ページ送りボタンの制御
+// ページ送りボタンの制御（常に表示版）
 function renderPagination(totalItems) {
     const paginationControls = document.getElementById('pagination-controls');
-    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-    if (totalPages <= 1) {
-        paginationControls.innerHTML = "";
-        return;
-    }
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1; // 商品0でも1ページとみなす
 
     paginationControls.innerHTML = `
         <button class="page-btn" ${currentPage === 0 ? 'disabled' : ''} onclick="movePage(-1)">◀ 前のページ</button>
-        <span style="font-weight:bold;">${currentPage + 1} / ${totalPages}</span>
+        <span style="font-weight:bold; font-size: 1.2em;">${currentPage + 1} / ${totalPages}</span>
         <button class="page-btn" ${currentPage >= totalPages - 1 ? 'disabled' : ''} onclick="movePage(1)">次のページ ▶</button>
     `;
 }
@@ -194,24 +187,18 @@ window.movePage = function(step) {
 // 4. イベントリスナー・カート関連
 // ==========================================
 function setupEventListeners() {
-    const cartOpenBtn = document.getElementById('cart-open-btn');
     const cartCloseBtn = document.getElementById('cart-close-btn');
     const optAddToCartBtn = document.getElementById('opt-add-to-cart-btn');
     const orderConfirmBtn = document.getElementById('order-confirm-btn');
 
-    if (cartOpenBtn) cartOpenBtn.onclick = () => {
-        renderCartList();
-        document.getElementById('cart-modal').style.display = 'block';
-    };
-
-    if (cartCloseBtn) cartCloseBtn.onclick = () => {
+   if (cartCloseBtn) cartCloseBtn.onclick = () => {
         document.getElementById('cart-modal').style.display = 'none';
     };
 
     if (optAddToCartBtn) optAddToCartBtn.onclick = confirmAddToCart;
 
     if (orderConfirmBtn) orderConfirmBtn.onclick = () => {
-        if (cart.length === 0) return alert("カートが空です");
+        if (cart.length === 0) return;
         alert("注文を確定しました！");
         cart = [];
         saveCart();
@@ -283,31 +270,81 @@ function saveCart() {
 
 function updateCartCount() {
     const cartCountLabel = document.getElementById('cart-count');
-    if (cartCountLabel) cartCountLabel.innerText = cart.length;
+    const cartBtn = document.getElementById('cart-open-btn');
+
+    if (cartCountLabel) {
+        cartCountLabel.innerText = cart.length;
+    }
+
+    if (cartBtn) {
+        if (cart.length > 0) {
+            cartBtn.classList.add('active');
+            // 直接関数を指定せず、setupEventListeners側で制御するか、ここで直接定義します
+            cartBtn.onclick = () => {
+                renderCartList();
+                document.getElementById('cart-modal').style.display = 'block';
+            };
+        } else {
+            cartBtn.classList.remove('active');
+            cartBtn.onclick = null; // カートが空なら何もしない
+        }
+    }
 }
 
 function renderCartList() {
     const list = document.getElementById('cart-items-list');
-    const totalLabel = document.getElementById('total-price');
+    const orderConfirmBtn = document.getElementById('order-confirm-btn');
     
-    if (!list) return;
+    if (!list || !orderConfirmBtn) return;
 
     if (cart.length === 0) {
-        list.innerHTML = "<p>カートは空です</p>";
+        // カートが空の場合の表示
+        list.innerHTML = "<p style='text-align:center; padding:50px; font-size:1.5em;'>カートは空です</p>";
+        orderConfirmBtn.innerHTML = `注文を確定する`;
+        orderConfirmBtn.disabled = true;
+        orderConfirmBtn.style.opacity = "0.5";
+        orderConfirmBtn.style.cursor = "not-allowed";
     } else {
-        list.innerHTML = cart.map((item, index) => `
-            <div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #eee; align-items:center;">
-                <div>
-                    <div style="font-weight:bold;">${item.name}</div>
-                    <div style="font-size:0.8em; color:#666;">${item.selectedOptions ? item.selectedOptions.join(', ') : ''}</div>
+        // 1. 商品リストのHTMLを生成
+        let html = `
+            <div class="cart-header">
+                <div style="grid-column: span 2;">商品</div>
+                <div style="text-align:center;">価格(税込)</div>
+                <div style="text-align:center;">数量</div>
+                <div style="text-align:right;"></div>
+            </div>
+        `;
+
+        // 削除ボタンのクラスを書き換える
+        html += cart.map((item, index) => `
+            <div class="cart-item-row">
+                <img src="${item.image}" class="cart-item-img">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-options">${item.selectedOptions ? item.selectedOptions.join(', ') : ''}</div>
                 </div>
-                <span>${item.displayPrice || item.price}円 <button onclick="removeFromCart(${index})" style="margin-left:10px; padding:5px 10px;">削除</button></span>
+                <div class="cart-item-price">¥${(item.displayPrice || item.price).toLocaleString()}</div>
+                <div class="cart-item-qty">1</div>
+                <div class="cart-item-actions">
+                    <button class="cart-btn-small">変更</button>
+                    <button class="cart-btn-delete" onclick="removeFromCart(${index})">削除</button>
+                </div>
             </div>
         `).join('');
-    }
 
-    const total = cart.reduce((sum, item) => sum + (item.displayPrice || item.price), 0);
-    if (totalLabel) totalLabel.innerText = `合計: 税込 ${total}円`;
+        // 2. 生成したHTMLをリストに代入（ここが重要！）
+        list.innerHTML = html;
+
+        // 3. 合計金額の計算とボタン表示の更新
+        const total = cart.reduce((sum, item) => sum + (item.displayPrice || item.price), 0);
+        
+        // 金額とアクションを改行して表示
+        orderConfirmBtn.innerHTML = `¥${total.toLocaleString()} (税込) 　注文を確定する`;
+
+        orderConfirmBtn.disabled = false;
+        orderConfirmBtn.style.opacity = "1";
+        orderConfirmBtn.style.cursor = "pointer";
+    }
 }
 
 window.removeFromCart = function(index) {
