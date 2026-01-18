@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>飲食店オーダーシステム デモ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="category-top">
+        <div class="category-item">期間限定スイーツ</div>
+        <div class="category-item active">ドリンク</div>
+        <div class="category-item">軽食</div>
+        <div class="category-item">デザート</div>
+        <div class="category-item">モーニング</div>
+    </div>
+    <div class="category-sub">
+        <div class="sub-item">アイスコーヒー</div>
+        <div class="sub-item">ホットコーヒー</div>
+        <div class="sub-item">紅茶</div>
+        <div class="sub-item">ソフトドリンク</div>
+        <div class="sub-item">お子様用ドリンク</div>
+    </div>
+</header>
+
+<div class="container">
+    <main id="menu-grid">
+        </main>
+
+    <aside>
+        <button class="side-btn btn-call">🔔 店員を呼ぶ</button>
+        <button class="side-btn">言語選択<br>Language</button>
+        <button class="side-btn">お会計</button>
+        <button class="side-btn">注文履歴</button>
+        <button class="side-btn btn-cart" id="cart-open-btn">
+            注文<br>カート<br><span id="cart-count">0</span>点
+        </button>
+    </aside>
+</div>
+
+<div id="cart-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="cart-close-btn">&times;</span>
+        <h1>注文カート</h1>
+        <div id="cart-items-list"></div>
+        <hr>
+        <div class="cart-footer">
+            <h2 id="total-price">合計: 税込 0円</h2>
+            <button id="order-confirm-btn" class="order-submit">注文を確定する</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

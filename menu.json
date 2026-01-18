@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "ブレンドコーヒー",
+        "price": 500,
+        "image": "images/ブレンドコーヒー.png" 
+    },
+    {
+        "id": 2,
+        "name": "アメリカーノ",
+        "price": 600,
+        "image": "images/アメリカーノ.png"
+    }
+]
