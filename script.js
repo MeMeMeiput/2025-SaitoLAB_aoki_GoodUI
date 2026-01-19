@@ -56,6 +56,7 @@ let currentMain = "ドリンク";
 let currentSub = "アイスコーヒー"; // 初期値を実在するカテゴリに変更
 let currentPage = 0; // 現在のページ番号（0始まり）
 const ITEMS_PER_PAGE = 2; // 1画面最大2商品
+let orderHistory = []; // 注文済みの商品を溜める配列
 
 // ==========================================
 // 2. 初期化処理
@@ -197,15 +198,97 @@ function setupEventListeners() {
 
     if (optAddToCartBtn) optAddToCartBtn.onclick = confirmAddToCart;
 
-    if (orderConfirmBtn) orderConfirmBtn.onclick = () => {
+    orderConfirmBtn.onclick = () => {
         if (cart.length === 0) return;
+
+        // 現在時刻を取得
+        const now = new Date();
+        const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+        // カートの中身を履歴にコピー（注文時刻を付与）
+        cart.forEach(item => {
+        orderHistory.push({ ...item, orderedAt: timeString });
+        });
+
         alert("注文を確定しました！");
+
+        // 注文履歴ボタンを有効化 ---
+        const historyBtn = document.getElementById('history-btn');
+        if (historyBtn) {
+        historyBtn.classList.remove('disabled'); // 灰色を解除
+        historyBtn.classList.add('btn-history-active'); // 有効色を追加
+        historyBtn.onclick = openHistoryModal; // ★ここで関数を割り当てる
+        }
+
+        // お会計ボタンを有効化 ---
+        const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.classList.remove('disabled'); // 灰色を解除
+        checkoutBtn.classList.add('btn-checkout-active'); // 有効色を追加
+        checkoutBtn.onclick = showCheckoutTotal; // クリック時に金額を表示する関数を登録
+    }
+
+        // カートを空にして更新
         cart = [];
         saveCart();
         updateCartCount();
         document.getElementById('cart-modal').style.display = 'none';
     };
+
+    // --- 3. 履歴を表示する関数を「新しく追加」する ---
+    function openHistoryModal() {
+        const list = document.getElementById('history-items-list');
+        const modal = document.getElementById('history-modal');
+    
+        if (!list || !modal) return;
+
+        // 履歴の中身をHTMLとして生成
+        let html = `
+            <div class="cart-header" style="background-color: #555;">
+                <div style="grid-column: span 2;">注文商品</div>
+                <div style="text-align:center;">価格(税込)</div>
+                <div style="text-align:center;">注文時刻</div>
+            </div>
+        `;
+
+    if (orderHistory.length === 0) {
+        html += '<p style="text-align:center; padding:20px;">履歴はありません</p>';
+    } else {
+        html += orderHistory.map(item => `
+            <div class="cart-item-row">
+                <img src="${item.image}" class="cart-item-img">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                </div>
+                <div class="cart-item-price">¥${(item.displayPrice || item.price).toLocaleString()}</div>
+                <div style="text-align:center; font-weight:bold; color:#666;">${item.orderedAt}</div>
+            </div>
+        `).join('');
+    }
+    list.innerHTML = html;
+    modal.style.display = 'block'; // モーダルを表示
 }
+// 履歴モーダルを閉じる関数（これも追加）
+function closeHistoryModal() {
+    document.getElementById('history-modal').style.display = 'none';
+}
+// script.js 内に追加
+function showCheckoutTotal() {
+    // orderHistory 配列内のすべての商品の価格を合計する
+    const total = orderHistory.reduce((sum, item) => sum + (item.displayPrice || item.price), 0);
+    
+    // 合計金額をアラートで表示
+    alert(`お会計の合計金額は ¥${total.toLocaleString()} (税込) です。\nレジまでお越しください。`);
+}
+}
+
+
+window.closeHistoryModal = function() {
+    document.getElementById('history-modal').style.display = 'none';
+};
+
+// 閉じるボタンのイベント登録を init 等に追加
+document.getElementById('history-close-btn').onclick = closeHistoryModal;
 
 window.addToCart = function(id) {
     selectedProduct = menuData.find(p => p.id === id);

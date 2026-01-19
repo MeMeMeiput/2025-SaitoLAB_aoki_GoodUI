@@ -28,14 +28,13 @@
     </main>
 
     <aside>
-        <button class="side-btn btn-call">🔔 店員を呼ぶ</button>
-        <button class="side-btn">言語選択<br>Language</button>
-        <button class="side-btn">お会計</button>
-        <button class="side-btn">注文履歴</button>
-        <button class="side-btn btn-cart" id="cart-open-btn">
-            注文<br>カート<br><span id="cart-count">0</span>点
-        </button>
-    </aside>
+    <button class="side-btn btn-call">🔔 店員を呼ぶ</button>
+    <button class="side-btn disabled">言語選択<br>Language</button>
+    <button class="side-btn disabled" id="checkout-btn">お会計</button>
+    <button class="side-btn disabled" id="history-btn">注文履歴</button> <button class="side-btn btn-cart" id="cart-open-btn">
+        注文<br>カート<br><span id="cart-count">0</span>点
+    </button>
+</aside>
 </div>
 
 <div id="cart-modal" class="modal">
@@ -52,6 +51,19 @@
         <div class="cart-footer">
             <button id="order-confirm-btn" class="order-submit">注文を確定する</button>
         </div>
+    </div>
+</div>
+
+<div id="history-modal" class="modal">
+    <div class="modal-content" style="display: flex; flex-direction: column; height: 100vh; position: relative;">
+        <span class="close-btn" id="history-close-btn">&times;</span>
+        
+        <div style="flex-shrink: 0; padding-top: 10px;">
+            <h1 style="margin: 0;">注文履歴</h1>
+            <p style="margin: 10px 0; font-size: 0.9em; color: #666;">これまでに注文した商品の一覧です</p>
+        </div>
+        
+        <div id="history-items-list"></div>
     </div>
 </div>
 

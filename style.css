@@ -185,6 +185,54 @@ aside {
 
 .btn-call { background-color: var(--accent-yellow); color: black; }
 
+/* サイドバーの基本状態（未注文・無効時） */
+.side-btn:disabled,
+.side-btn.disabled {
+    background-color: #ccc;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+/* 注文履歴ボタンが有効になった時の色（例：落ち着いた青やグレー） */
+.side-btn.btn-history-active {
+    background-color: #b6ca20; /* 有効な履歴ボタンの色 */
+    color: white;
+    cursor: pointer;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+/*注文履歴ページ*/
+/* --- 履歴リストの表示領域を最大化し、スクロール可能にする --- */
+#history-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-sizing: border-box; /* パディングが高さに含まれるようにする */
+}
+/* 履歴リストエリア：ここがスクロールの肝です */
+#history-items-list {
+    flex: 1;           /* 親の余りスペースを全て占有する */
+    min-height: 0;     /* これ重要！中身が親を突き抜けないようにする */
+    overflow-y: auto;  /* 縦方向に溢れたらスクロールを出す */
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    -webkit-overflow-scrolling: touch;
+}
+/* ヘッダーを固定する */
+#history-modal .cart-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    flex-shrink: 0;    /* ヘッダー自体が潰れないように固定 */
+}
+
+/* 閉じるボタンがある上部エリア */
+#history-modal div:nth-child(2) {
+    flex-shrink: 0;    /* タイトル部分が潰れないようにする */
+}
+
+
 /* --- カートボタンの基本状態（無効時：灰色） --- */
 .side-btn.btn-cart {
     background-color: #ccc; /* 無効時は灰色 */
@@ -210,7 +258,6 @@ aside {
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
-
 
 /* カートモーダル (注文カートボタン)*/
 .modal {
@@ -484,4 +531,13 @@ aside {
 .opt-btn-add {
     background-color: var(--primary-green);
     color: white;
+}
+
+/* style.css の末尾などに追加 */
+.side-btn.btn-checkout-active {
+    background-color: #f39c12; /* オレンジ系の有効色 */
+    color: white;
+    cursor: pointer;
+    opacity: 1;
+    transition: all 0.3s ease;
 }
