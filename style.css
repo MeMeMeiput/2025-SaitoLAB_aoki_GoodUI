@@ -341,11 +341,32 @@ aside {
 #history-modal .cart-header { background-color: #555; }
 
 .cart-footer {
-    padding: 30px 0;
     display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
-    background-color: #f5f5f5;
-    flex-shrink: 0;
+    position: relative; /* 子要素の基準点にする */
+    padding: 30px 0 !important;
+}
+
+/* 合計金額を中央寄せにする */
+#history-total-amount {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* --- 注文履歴画面専用：お会計ボタンの調整 --- */
+.history-close-submit {
+    align-self: flex-end;
+    margin-right: 5%;
+    width: 20% !important;      /* 幅をコンパクトに */
+    max-width: 400px;
+    padding: 15px !important;    /* 高さを抑える */
+    font-size: 1.2em !important;
+    background: #f39c12 !important; /* お会計ボタンと同じオレンジ系 */
+    border-radius: 50px !important;
+
 }
 
 .order-submit {
@@ -372,6 +393,7 @@ aside {
 
 .order-submit:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
 
+
 /* --- 10. Option Modal (オプション画面固有) --- */
 .opt-modal {
     display: none;
@@ -380,25 +402,28 @@ aside {
     left: 0; top: 0;
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.6);
+    overflow-y: auto; /* モーダル自体が長い場合にスクロール可能に */
 }
 
 .opt-content {
     background-color: white;
-    width: 80%;
-    max-width: 500px;
-    margin: 10% auto;
+    width: 90%; /* モバイル時の余白を確保 */
+    max-width: 750px; /* 500pxから750pxに拡大し、カードの並びを安定化 */
+    margin: 5vh auto; /* 上下に5%の余白 */
     padding: 30px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    max-height: 90vh; /* 画面からはみ出さないように制限 */
+    display: flex;
+    flex-direction: column;
 }
 
 .opt-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin: 20px 0;
-    text-align: left;
+    flex: 1;
+    overflow-y: auto; /* オプション項目が多い場合に内部スクロール */
+    padding-right: 10px;
+    margin: 10px 0;
 }
 
 .opt-item {
@@ -406,11 +431,22 @@ aside {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
+    margin-bottom: 10px;
     background: #f9f9f9;
     border-radius: 10px;
     font-size: 1.2em;
     cursor: pointer;
 }
+
+/* モーダル内の商品名（h2）の余白調整 */
+#opt-product-name {
+    margin-top: 0;         /* 上の余白をゼロに */
+    margin-bottom: 10px;  /* 下の余白を少しだけ残してリストとの間隔を調整 */
+}
+
+/* スクロールバーのデザイン（Good UI用） */
+.opt-list::-webkit-scrollbar { width: 6px; }
+.opt-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
 
 .opt-checkbox { width: 25px; height: 25px; }
 
@@ -428,3 +464,170 @@ aside {
 
 .opt-btn-cancel { background-color: #eee; color: #333; }
 .opt-btn-add { background-color: var(--primary-green); color: white; }
+
+/* --- 11. 2ステップオプション専用スタイル --- */
+.step2-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px 0;
+    text-align: left;
+    align-items: center;
+}
+
+.step2-left img {
+    width: 200px; /* 画像を少し大きく強調 */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.step2-right {
+    flex: 1;
+}
+.step2-right div:first-child {
+    font-size: 1.6em; /* 商品名を強調 */
+    margin-bottom: 10px;
+}
+
+.step2-opt-summary {
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.6;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.qty-control-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 20px;
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 50px;
+}
+
+.qty-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid #280508;
+    background: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.qty-display {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* ドリンクセットのカード選択エリア */
+.drink-set-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2列で安定表示 */
+    gap: 15px;
+    margin-top: 15px;
+    padding: 15px;
+    background: #f4f4f4;
+    border-radius: 12px;
+}
+
+.drink-card {
+    background: white;
+    border: 3px solid transparent; /* 選択状態をわかりやすく */
+    transition: all 0.2s ease;
+}
+
+.drink-card.selected {
+    border-color: var(--primary-green);
+    background-color: #f0fff0;
+}
+
+.drink-card img {
+    width: 100%;
+}
+
+.drink-card p {
+    margin: 5px 0 0;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+/* ---ドリンクセットエリア --- */
+.drink-set-selection-box {
+    background: #ffffff;
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.set-label {
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+/* 4つのカードを横に並べる */
+.drink-card-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.drink-card-small {
+    flex: 1;
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.drink-card-small.selected {
+    border: 3px solid var(--primary-green);
+    background-color: #f0fff0;
+    transform: scale(1.05);
+}
+
+.drink-card-small img {
+    width: 100%;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.drink-card-small p {
+    font-size: 0.7em;
+    margin: 5px 0 0;
+    font-weight: bold;
+}
+
+/* チェックボックス付きのオプション行 */
+.opt-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 右寄せ */
+    gap: 10px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    background: #f9f9f9;
+    border-radius: 10px; /* 角丸を少し抑えた四角に近い形状 */
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.opt-toggle-row input {
+    width: 20px;
+    height: 20px;
+}

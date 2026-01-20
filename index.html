@@ -42,10 +42,8 @@
     <div class="opt-content">
         <h2 id="opt-product-name">商品名</h2>
         <div id="opt-list-container" class="opt-list"></div>
-        <div class="opt-footer">
-            <button class="opt-btn-cancel" onclick="closeOptionModal()">キャンセル</button>
-            <button class="opt-btn-add" id="opt-add-to-cart-btn">カートに追加</button>
-        </div>
+        <div class="opt-footer" id="opt-modal-footer">
+            </div>
     </div>
 </div>
 
@@ -72,7 +70,8 @@
         </div>
         <div id="history-items-list"></div>
         <div class="cart-footer">
-            <button class="order-submit" onclick="closeHistoryModal()" style="background: #555;">閉じる</button>
+            <div id="history-total-amount" style="font-size: 1.8em; font-weight: bold; color: #280508;">合計 ¥0 (税込)</div>
+            <button id="history-to-checkout-btn" class="order-submit history-close-submit">お会計へ</button>
         </div>
     </div>
 </div>
