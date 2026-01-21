@@ -640,35 +640,39 @@ aside {
 
 /* --- iPad Pro (834px 〜 1366px) 向けのレスポンシブ調整 --- */
 @media screen and (min-width: 768px) and (max-width: 1366px) {
-    /* 1. ヘッダーの高さを少し詰め、コンテンツの表示領域を広げる */
-    :root {
-        --header-height: 100px; /* PC版の125pxから少し削減 */
-    }
-
-    /* 2. メインコンテンツ全体の上下パディングを最小限に抑える */
-    main {
-        padding: 5px 20px;
-    }
-
-    /* 3. 商品グリッドの間隔（ギャップ）を狭め、カード間の隙間を詰め */
-    #menu-grid {
-        gap: 12px;
-        align-content: center; /* 垂直中央に寄せる Good UI を維持 */
-    }
-
-    /* 4. カード内の画像高さを抑え、縦方向の「見切れ」を決定的に防止 */
-    .card img {
-        height: 180px; /* PC版の240pxから180pxへ縮小 */
-    }
-
-    /* 5. ページ送りボタンエリアの高さと余白を圧縮 */
-    .pagination-container {
-        height: 60px;
-        padding-top: 0;
-    }
-
-    /* 6. コンテナの高さを最新のビューポート(dvh)に合わせて最適化 */
+    /* 1. コンテナの高さを動的ビューポートに合わせる */
     .container {
         height: calc(100dvh - var(--header-height));
+    }
+
+    /* 2. mainの余白を最小限にし、中身（商品＋ボタン）を垂直中央に配置 */
+    main {
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 商品とボタンをセットで画面中央へ */
+        gap: 0; /* 不要な隙間を排除 */
+    }
+
+    /* 3. 商品グリッドが広がりすぎないように「flex: initial」に変更 */
+    #menu-grid {
+        flex: initial; /* 画面いっぱいに広がるのをやめ、カードの高さに合わせる */
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px; /* カード同士の横・縦の隙間を少し詰める */
+        align-content: center;
+        margin-bottom: 0; /* 下のボタンとの隙間を制御 */
+    }
+
+    /* 4. カードのサイズは維持する（PC版の240pxをキープ） */
+    .card img {
+        height: 240px; 
+    }
+
+    /* 5. ページ送りボタンをカードのすぐ下（10px〜20px）に配置 */
+    .pagination-container {
+        height: auto;      /* 固定高さをやめて内容に合わせる */
+        padding: 15px 0;   /* カードとの距離を調整 */
+        margin-top: 0;     /* 無駄なマージンを削除 */
     }
 }
