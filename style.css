@@ -645,61 +645,61 @@ aside {
         height: calc(100dvh - var(--header-height));
     }
 
-    /* 2. mainの余白を最小限にし、中身（商品＋ボタン）を垂直中央に配置 */
+    /* 2. mainの余白を最小限にし、垂直中央に配置 */
     main {
         padding: 0 20px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* 商品とボタンをセットで画面中央へ */
-        gap: 0; /* 不要な隙間を排除 */
+        justify-content: center;
+        gap: 0;
     }
 
-    /* 3. 商品グリッドが広がりすぎないように「flex: initial」に変更 */
+    /* 3. 商品グリッドの広がりを抑える */
     #menu-grid {
-        flex: initial; /* 画面いっぱいに広がるのをやめ、カードの高さに合わせる */
+        flex: initial;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px; /* カード同士の横・縦の隙間を少し詰める */
+        gap: 15px;
         align-content: center;
-        margin-bottom: 0; /* 下のボタンとの隙間を制御 */
+        margin-bottom: 0;
     }
 
-    /* 4. カードのサイズは維持する（PC版の240pxをキープ） */
+    /* 4. カード内の画像高さ */
     .card img {
         height: 240px; 
     }
 
-    /* 5. ページ送りボタンをカードのすぐ下（10px〜20px）に配置 */
+    /* 5. ページ送りボタンを上に寄せる */
     .pagination-container {
-        height: auto;      /* 固定高さをやめて内容に合わせる */
-        padding: 15px 0;   /* カードとの距離を調整 */
-        margin-top: 0;     /* 無駄なマージンを削除 */
+        height: auto;
+        padding: 15px 0;
+        margin-top: 0;
     }
 
-    /* 1. カートモーダル全体の高さを動的ビューポートに固定して見切れを防止 */
+    /* --- ここから下がカート用の修正 --- */
+
+    /* 6. カートモーダルの見切れ防止 */
     #cart-modal .modal-content {
         height: 100dvh;
-        padding: 15px; /* 全体のパディングを少し詰め、表示領域を稼ぐ */
+        padding: 15px;
     }
 
-    /* 2. 商品リストが広がりすぎないよう高さを制限 */
+    /* 7. 商品リストの高さを55vhに制限 */
     #cart-items-list {
-        flex: 0 1 55vh; /* 画面の約55%を上限とし、商品が少なければ縮む設定に変更 */
+        flex: 0 1 55vh !important; /* 強制的に適用させるために !important を追加 */
         margin-bottom: 10px;
     }
 
-    /* 3. フッターの上下余白を大幅に削減（30pxから10pxへ） */
+    /* 8. フッターの余白を削ってボタンを上げる */
     #cart-modal .cart-footer {
         padding: 10px 0 !important;
         min-height: auto;
     }
 
-    /* 4. 注文確定ボタンをコンパクトにし、位置を上に引き上げる */
+    /* 9. 確定ボタンをコンパクトに */
     #order-confirm-btn {
-        padding: 14px !important; /* PC版の22pxから大幅に縮小 */
+        padding: 14px !important;
         font-size: 1.2em !important;
         width: 85% !important;
     }
-}
-
-
+} /* ← 全ての閉じ括弧がここに入っている必要があります */
