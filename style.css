@@ -702,4 +702,40 @@ aside {
         font-size: 1.2em !important;
         width: 85% !important;
     }
+
+    /* 10. 履歴モーダル全体を画面内に収める */
+    #history-modal .modal-content {
+        height: 100dvh !important;
+        padding: 15px !important;
+    }
+
+    /* 11. 履歴リストの高さを制限（カートと同じく50vhに） */
+    #history-items-list {
+        flex: 0 1 50vh !important;
+        margin-bottom: 10px;
+    }
+
+    /* 12. 履歴フッターの横並びバランスをiPad用に調整 */
+    #history-modal .cart-footer {
+        padding: 10px 20px !important;
+        min-height: auto;
+        flex-direction: row; /* 横並びを維持 */
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* 13. お会計ボタンのサイズを微調整 */
+    #history-to-checkout-btn {
+        padding: 12px 20px !important;
+        font-size: 1.1em !important;
+        min-width: 150px;
+        width: auto !important; /* 横並びなので自動幅に */
+    }
+
+    /* 14. 合計金額の文字サイズを少し抑える */
+    #history-total-amount {
+        font-size: 1.5em !important;
+        flex: 1;
+        text-align: left;
+    }
 } /* ← 全ての閉じ括弧がここに入っている必要があります */
