@@ -102,10 +102,12 @@ header {
 
 main {
     flex: 1;
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    /* 垂直方向（上下）の中央に配置 */
+    justify-content: center; 
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 /* --- 4. Menu Grid & Cards (商品表示) --- */
@@ -114,7 +116,8 @@ main {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    align-content: start;
+    /* start から center に変更することで、グリッド内のカードを垂直中央に配置します */
+    align-content: center; 
 }
 
 .card {
@@ -168,11 +171,14 @@ main {
 
 /* --- 6. Sidebar (サイドボタン群) --- */
 aside {
-    width: 130px;
-    padding: 10px;
+    width: 140px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    /* ボタン群を上下の中央に配置 */
+    justify-content: center; 
+    gap: 20px;
+    border-left: 2px solid #ddd;
 }
 
 .side-btn {
