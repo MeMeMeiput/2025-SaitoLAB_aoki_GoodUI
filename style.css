@@ -675,4 +675,31 @@ aside {
         padding: 15px 0;   /* カードとの距離を調整 */
         margin-top: 0;     /* 無駄なマージンを削除 */
     }
+
+    /* 1. カートモーダル全体の高さを動的ビューポートに固定して見切れを防止 */
+    #cart-modal .modal-content {
+        height: 100dvh;
+        padding: 15px; /* 全体のパディングを少し詰め、表示領域を稼ぐ */
+    }
+
+    /* 2. 商品リストが広がりすぎないよう高さを制限 */
+    #cart-items-list {
+        flex: 0 1 55vh; /* 画面の約55%を上限とし、商品が少なければ縮む設定に変更 */
+        margin-bottom: 10px;
+    }
+
+    /* 3. フッターの上下余白を大幅に削減（30pxから10pxへ） */
+    #cart-modal .cart-footer {
+        padding: 10px 0 !important;
+        min-height: auto;
+    }
+
+    /* 4. 注文確定ボタンをコンパクトにし、位置を上に引き上げる */
+    #order-confirm-btn {
+        padding: 14px !important; /* PC版の22pxから大幅に縮小 */
+        font-size: 1.2em !important;
+        width: 85% !important;
+    }
 }
+
+
