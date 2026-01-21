@@ -637,3 +637,38 @@ aside {
     width: 20px;
     height: 20px;
 }
+
+/* --- iPad Pro (834px 〜 1366px) 向けのレスポンシブ調整 --- */
+@media screen and (min-width: 768px) and (max-width: 1366px) {
+    /* 1. ヘッダーの高さを少し詰め、コンテンツの表示領域を広げる */
+    :root {
+        --header-height: 100px; /* PC版の125pxから少し削減 */
+    }
+
+    /* 2. メインコンテンツ全体の上下パディングを最小限に抑える */
+    main {
+        padding: 5px 20px;
+    }
+
+    /* 3. 商品グリッドの間隔（ギャップ）を狭め、カード間の隙間を詰め */
+    #menu-grid {
+        gap: 12px;
+        align-content: center; /* 垂直中央に寄せる Good UI を維持 */
+    }
+
+    /* 4. カード内の画像高さを抑え、縦方向の「見切れ」を決定的に防止 */
+    .card img {
+        height: 180px; /* PC版の240pxから180pxへ縮小 */
+    }
+
+    /* 5. ページ送りボタンエリアの高さと余白を圧縮 */
+    .pagination-container {
+        height: 60px;
+        padding-top: 0;
+    }
+
+    /* 6. コンテナの高さを最新のビューポート(dvh)に合わせて最適化 */
+    .container {
+        height: calc(100dvh - var(--header-height));
+    }
+}
